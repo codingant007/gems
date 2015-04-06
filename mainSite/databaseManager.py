@@ -2,8 +2,8 @@ import os
 import sys
 import json
 from django.contrib.auth.models import User
-from .models import User, Candidates,Votes, PublicKeys, ChallengeStrings ,Posts
-from Crypto.PublicKey import RSA
+from .models import Users, Candidates,Votes, PublicKeys, ChallengeStrings ,Posts
+#from Crypto.PublicKey import RSA
 import cryptography
 
 def registerUsers(userList):
@@ -42,7 +42,7 @@ def registerUsers(userList):
 def addUser(username, department, name, course, password, voted=False):
 	'''Registers new user with the system including signature key generation and registration'''
 	#generate private key
-	key = RSA.generate(2048)
+	#key = RSA.generate(2048)
 	encryptedPrivateKey = cryptography.symmetricEncrypt(key.exportKey(), password)
 	p1 = Users(username=username, voted=voted, department=department, name=name, course=course, encryptedPrivateKey=encryptedPrivateKey)
 	p1.save()
@@ -71,7 +71,7 @@ def registerVote(plainText, username, password):
 	decryptedPrivateKey = cryptography.symmetricDecrypt(userlist[0].encryptedPrivateKey,password)
 
 	certificate = cryptography.asymmetricSign(plainText,decryptedPrivateKey)
-	key = RSA.importKey(decryptedPrivateKey)
+	#key = RSA.importKey(decryptedPrivateKey)
 	key = key.publickey().exportKey()
 	assert(len(PublicKeys.objects.filter(publicKey=key)) == 1)
 	publicKey = PublicKeys.objects.filter(publicKey=key)[0]

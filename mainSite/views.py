@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 #import database fields
-from mainSite.models import User, Candidates,Votes, PublicKeys, ChallengeStrings , Posts
+from mainSite.models import Users, Candidates,Votes, PublicKeys, ChallengeStrings , Posts
 
 # Create your views here.
 def resultsView(request):
@@ -70,17 +70,13 @@ def voterHome(request):
 	return render(request, 'main_page.html')
 
 def view_candidate(request):
-    	candidate_i = New_Candidate.objects.all()
-	candidate_data = {
-		"candidate_detail" : candidate_i
-	}
+	candidate_i = New_Candidate.objects.all()
+	candidate_data = {"candidate_detail" : candidate_i}
 	return render_to_response('view_candidates.html', candidate_data, context_instance=RequestContext(request))
 
 def candidateView(request,candidateName):
 	b = New_Candidate.objects.get(name=candidateName)
-	data = {
-		"detail" : b
-	}
+	data = {"detail" : b}
 	#candidateDetails = getCandidateDetail(candidateName)
 	#contextObj = Context({'candidateName':candidateName,'candidateDetails':candidateDetails})
 	return render_to_response('test.html',data,context_instance=RequestContext(request))
@@ -91,5 +87,5 @@ def register(request):
 def add_candidate(request):
 	if request.GET:
 		new_candidate = New_Candidate(name=request.GET['name'],post=request.GET['optionsRadios'],  roll=request.GET['roll'], department=request.GET['dept'], cpi=request.GET['cpi'], sem=request.GET['sem'], backlogs=request.GET['back'], email=request.GET['email'], contact=request.GET['contact'], hostel=request.GET['hostel'], room=request.GET['room'], agenda=request.GET['agenda'])
-        	new_candidate.save()
+		new_candidate.save()
 	return HttpResponseRedirect('/main')
