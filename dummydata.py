@@ -16,7 +16,7 @@ userList = [{'username':'kayush', 'department':'cse', 'name':'Ayush', 'course':'
 databaseManager.makeCandidate('adgfd','some details','a')
 
 passy = databaseManager.registerUsers(userList)
-print passy
+print(passy)
 databaseManager.registerVote("some text pertaining to a vote", "kayush", passy[0])
 databaseManager.registerVote("some text pertaining to a vote", "kayush", passy[0])
 databaseManager.registerVote("some text pertaining to a vote", "kayush", passy[0])

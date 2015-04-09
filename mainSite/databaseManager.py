@@ -3,6 +3,7 @@ import sys
 import json
 from django.contrib.auth.models import User
 from .models import Users, Candidates,Votes, PublicKeys, ChallengeStrings ,Posts
+from django.db.models import Q
 #from Crypto.PublicKey import RSA
 import cryptography
 
@@ -205,3 +206,16 @@ def verifyVote(votes):
 		if value == False:
 			print(error)			
 	return value
+
+def getVoterDetails(voterName):
+	voterObj = Users.objects.get(username=voterName)
+	voterDict = {'name':voterObj.username,'gender':voterObj.gender,'course':voterObj.course}
+	return voterDict
+
+def getVotablePosts(voterGender,voterCourse):
+	postsObj = Posts.objects.filter(Q(eligibleGender=voterGender) | Q(eligibleGender='a'))
+	postsObj = postsObj.filter(Q(eligibleCourse=voterCourse) | Q(eligibleCourse='a'))
+	postsDictList = []
+	for item in postsObj:
+		postsDictList.append({'postName':item.postName,'postCount':item.postCount,'voterGender':item.voterGender,'voterCourse':item.voterCourse})
+	return postsDictList

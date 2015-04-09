@@ -2,7 +2,7 @@
 from django.shortcuts import render_to_response, render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.template import RequestContext, loader,Template,Context
-from .databaseManager import getCandidateDetail,getCandidatesList
+from .databaseManager import *
 from mainSite.models import *
 import json
 from django.core.context_processors import csrf
@@ -89,3 +89,9 @@ def add_candidate(request):
 		new_candidate = New_Candidate(name=request.GET['name'],post=request.GET['optionsRadios'],  roll=request.GET['roll'], department=request.GET['dept'], cpi=request.GET['cpi'], sem=request.GET['sem'], backlogs=request.GET['back'], email=request.GET['email'], contact=request.GET['contact'], hostel=request.GET['hostel'], room=request.GET['room'], agenda=request.GET['agenda'])
 		new_candidate.save()
 	return HttpResponseRedirect('/main')
+
+def voterView(request):
+	voterDetail = getVoterDetails('Nik')
+	votablePosts = getVotablePosts(voterDetail['gender'],voterDetail['course'])
+	contextObj = Context({'votablePosts':votablePosts})
+	return render_to_response('blank-page.html',contextObj)
