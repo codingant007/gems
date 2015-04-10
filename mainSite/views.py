@@ -11,20 +11,24 @@ from django.contrib.auth.decorators import login_required
 
 #import database fields
 from mainSite.models import Users, Candidates,Votes, PublicKeys, ChallengeStrings , Posts
+from mainSite.databaseManager import getWinner, getElectionStats
 
 # Create your views here.
 def resultsView(request):
 	indexPage = loader.get_template('index.html')
 	
-	stats = [	('vp',1,2,	[ ('candOne',200,'permaLink'),('candTwo',300,'xxx') ]	) ,
-				('tech',1,2,[ ('candThree',400,'xxx') , ('candFour',500,'xxx')]),
-				('welfare',1,3,[('candFive',500,'xxx') , ('candSix',764,'xxx') , ('candSeven',200,'xxx')])
+	stats = [	('Vice President',1,2,	[ ('candOne',400,'permaLink'),('candTwo',300,'xxx') ]	) ,
+				('Senator',3,3,[('candFive',500,'xxx') , ('candSix',764,'xxx') , ('candSeven',200,'xxx')]),
+				('Technical Secratary',1,2,[ ('candThree',400,'xxx') , ('candFour',500,'xxx')])
 			]
+	#winnerlist = getWinner(stats)	
+	winnerlist = [('Vice President', [('candOne', 400, 'permaLink')]), ('Senator', [('candFive', 500, 'xxx'), ('candSix', 764, 'xxx'), ('candSeven', 200, 'xxx')]), ('Technical Secratary', [('candFour', 500, 'xxx')])] 	##Comment this line out in the final version
 	NoOfVotes = 1000
-	contextObj = Context({'stats':stats,'NoOfVotes':NoOfVotes})
+	contextObj = Context({'stats':stats,'NoOfVotes':NoOfVotes, 'winnerlist':winnerlist})
 
 	return render_to_response('results.html',contextObj)
 	#return HttpResponse("index.html")
+
 def candidateStat(request,candidateName):
 	deptStats = {('cse',35),('ece',56)}
 	courseStats = {('ug',55),('pg',26),('phd',33)}
@@ -95,3 +99,11 @@ def voterView(request):
 	votablePosts = getVotablePosts(voterDetail['gender'],voterDetail['course'])
 	contextObj = Context({'votablePosts':votablePosts})
 	return render_to_response('blank-page.html',contextObj)
+
+
+def selectedCandidates(request): 
+	stats = getElectionStats()
+	#winnerlist = getWinner(stats)	
+	winnerlist = [('Vice President', [('candOne', 400, 'permaLink')]), ('Senator', [('candFive', 500, 'xxx'), ('candSix', 764, 'xxx'), ('candSeven', 200, 'xxx')]), ('Technical Secratary', [('CandFour', 500)])]
+	contextObj = Context({'winnerlist' : winnerlist})
+	return render_to_response('selected-candidates.html', contextObj)
