@@ -111,8 +111,23 @@ def getElectionStats():
 	return Stats
 
 #--------------------
+# This function gets a stats parameter as returned by getStats()
+# Returns a list in the same format as getStats() except that 
+# it only contains information about the selected candidates
+# and omits the second and third item in the tuples 
+# eg: [('Vice President', [('candOne', 400, 'permaLink')]), 
+# ('Senator', [('candFive', 500, 'xxx'), ('candSix', 764, 'xxx'), ('candSeven', 200, 'xxx')]),
+# ('Technical Secratary', [('CandFour', 500)])]
+
 def getWinner(Stats):
-	return 'Candidate1'
+	winnerlist = []
+	for post in Stats: 
+		postwinners = []	
+		postwinners = sorted(post[3], key=lambda x: x[1], reverse=True)
+		postwinners = postwinners[:post[1]]		#Create a list with the list of selected candidates for the post
+		tup = (post[0], postwinners)	#Create the tuple corresponding to the post
+		winnerlist.append(tup)		
+	return winnerlist
 #-------------------
 
 def approveCandidate(username):
