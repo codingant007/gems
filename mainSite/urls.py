@@ -18,6 +18,7 @@ urlpatterns = patterns('',
 	, url(r'^results/$',views.resultsView , name = 'results')
 	,url(r'^voting-page/$',views.voterView)
 	,url(r'^confirm$',views.voteRequestView)
+	, url(r'^selected-list$', views.selectedCandidates)
 	,
  )
 

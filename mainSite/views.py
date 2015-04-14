@@ -22,10 +22,15 @@ def resultsView(request):
 				('welfare',1,3,[('candFive',500,'xxx') , ('candSix',764,'xxx') , ('candSeven',200,'xxx')])
 			]
 	'''
+	# stats = [	('vp',1,2,	[ ('candOne',200,'permaLink'),('candTwo',300,'xxx') ]	) ,
+	# 			('tech',1,2,[ ('candThree',400,'xxx') , ('candFour',500,'xxx')]),
+	# 			('welfare',2,3,[('candFive',500,'xxx') , ('candSix',764,'xxx') , ('candSeven',200,'xxx')])
+	# 		]
 
 	stats = getStats()
+	winnerlist = getWinner(stats)
 	NoOfVotes = 1000
-	contextObj = Context({'stats':stats,'NoOfVotes':NoOfVotes})
+	contextObj = Context({'stats':stats,'NoOfVotes':NoOfVotes, 'winnerlist' :winnerlist})
 
 	return render_to_response('results.html',contextObj)
 	#return HttpResponse("index.html")
@@ -129,4 +134,15 @@ def voteRequestView(request):
 	contextObj = Context()
 	return render_to_response('blank-page.html',contextObj)
 
+#To Display the list of selected candidates after the election 
+def selectedCandidates(request): 
+	stats = getStats()
+	# stats = [	('vp',1,2,	[ ('candOne',200,'permaLink'),('candTwo',300,'xxx') ]	) ,
+	# 			('tech',1,2,[ ('candThree',400,'xxx') , ('candFour',500,'xxx')]),
+	# 			('welfare',2,3,[('candFive',500,'xxx') , ('candSix',764,'xxx') , ('candSeven',200,'xxx')])
+	# 		]
+	winnerlist = getWinner(stats)	
+	#winnerlist = [('Vice President', [('candOne', 400, 'permaLink')]), ('Senator', [('candFive', 500, 'xxx'), ('candSix', 764, 'xxx'), ('candSeven', 200, 'xxx')]), ('Technical Secratary', [('CandFour', 500)])]
+	contextObj = Context({'winnerlist' : winnerlist})
+	return render_to_response('selected-candidates.html', contextObj)
 
