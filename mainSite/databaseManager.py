@@ -219,3 +219,17 @@ def getVotablePosts(voterGender,voterCourse):
 	for item in postsObj:
 		postsDictList.append({'postName':item.postName,'postCount':item.postCount,'voterGender':item.voterGender,'voterCourse':item.voterCourse})
 	return postsDictList
+
+def getStats():
+	postsObj = Posts.objects.all()	
+	for item in postsObj:
+		candStatList = []
+		candCount = 0
+		candObj = Candidates.objects.all()
+		candObj = candObj.filter(contestingPost=postsObj.postName,approved=True)
+		for cand in candObj:
+			temp = (cand.username,cand.noOfVotes,'permaLink')
+			candStatList.append(temp)
+		tup = (postsObj.postName,postsObj.postCount, candCount ,candStatList)
+		candStatList.append(tup)
+	return candStatList

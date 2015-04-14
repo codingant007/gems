@@ -16,10 +16,14 @@ from mainSite.models import Users, Candidates,Votes, PublicKeys, ChallengeString
 def resultsView(request):
 	indexPage = loader.get_template('index.html')
 	
+	'''
 	stats = [	('vp',1,2,	[ ('candOne',200,'permaLink'),('candTwo',300,'xxx') ]	) ,
 				('tech',1,2,[ ('candThree',400,'xxx') , ('candFour',500,'xxx')]),
 				('welfare',1,3,[('candFive',500,'xxx') , ('candSix',764,'xxx') , ('candSeven',200,'xxx')])
 			]
+	'''
+
+	stats = getStats()
 	NoOfVotes = 1000
 	contextObj = Context({'stats':stats,'NoOfVotes':NoOfVotes})
 
@@ -94,4 +98,35 @@ def voterView(request):
 	voterDetail = getVoterDetails('Nik')
 	votablePosts = getVotablePosts(voterDetail['gender'],voterDetail['course'])
 	contextObj = Context({'votablePosts':votablePosts})
+	postdata= []
+	for postTemp in votablePosts:
+		candidates=Candidates.objects.filter(contestingPost=postTemp['postName'])
+		cList = []
+		for cand in candidates:
+			cList += [cand.username]
+		dat = {}
+		dat['candidates'] = cList
+		dat['post'] = postTemp['postName']
+		dat['postcount'] = postTemp['postCount']
+		postdata += [dat]
+		contextObj = Context({'data':postdata})
+	return render_to_response('votingpage.html',contextObj)
+
+def voteRequestView(request):
+	voterDetail = getVoterDetails('Nik')
+	votablePosts = getVotablePosts(voterDetail['gender',voterDetail['course']])
+	jsonDict = {}
+	for item in votablePosts:
+		candidatesVoted = request.POST.getlist(item.PostName)
+		jsonDict[item.PostName] = candidatesVoted
+		for candidate in candidatesVoted:
+			candObj = Candidates.objects.all()
+			candObj = candObj.filter(username=candidate.username)
+			candObj.noOfVotes = candObj.noOfVotes + 1
+			candObj.save()
+	jsonStr = json.dumps(jsonDict)
+	registerVote(jsonStr,voterDetail['name'],request.POST.get('alertInput'))
+	contextObj = Context()
 	return render_to_response('blank-page.html',contextObj)
+
+

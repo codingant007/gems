@@ -21,10 +21,11 @@ class Users(models.Model):
 
 class Candidates(models.Model):
 	username = models.CharField(max_length=50)
+	contestingPost = models.CharField(max_length=10,default='')
 	details = models.CharField(max_length=10000)
 	photo = models.CharField(max_length=100)
 	approved = models.BooleanField(default=False)
-
+	noOfVotes = models.IntegerField(max_length=6,default=0)
 	def __unicode__(self):
         	return self.username
 
@@ -47,10 +48,10 @@ class PublicKeys(models.Model):
 class Posts(models.Model):
 	postName = models.CharField(max_length=50)
 	postCount = models.IntegerField(max_length=3,default=0)
-	voterGender = models.CharField(max_length=1)    #'M'/'F'/'any'
-	voterCourse = models.CharField(max_length=2)		# 'UG'/'PG'/'any'
-	eligibleGender = models.CharField(max_length=1)		#'M'/'F'/'any'
-	eligibleCourse = models.CharField(max_length=2)     #'UG'/"PG"/'any'
+	voterGender = models.CharField(max_length=1)    #'M'/'F'/'a'
+	voterCourse = models.CharField(max_length=2)		# 'UG'/'PG'/'a'
+	eligibleGender = models.CharField(max_length=1)		#'M'/'F'/'a'
+	eligibleCourse = models.CharField(max_length=2)     #'UG'/"PG"/'a'
 	eligibleYear = models.CharField(max_length=2)		#minimum requirement of year
 
 
